@@ -1,0 +1,31 @@
+A1:
+Working directory is the project folder; the staging area is an intermediate space where changes are gathered before they are committed; a commit is a snapshot of the files at a certain time, with a message describing what was changed; *a remote repository is a version of the project hosted on the Internet or another network, one may have several of them and it may be read/write or read only for the project maker.
+A2:
+In a normal repository, HEAD  is a pointer that references the current commit you're working on; main  is the default branch in the Git repository where the production-ready code resides; origin refers to the *repository where you originally cloned your code from.
+A3:
+To keep your working directory up to date between GitHub and VS code. You don't want any discrepancies or the code may be executed contrary to your intentions.
+A4:
+The git fetch command retrieves the latest commit history from your remote repository without affecting the local working directory. It is for when you want to retrieve the latest status from the remote repository to review the changes before they are reflected in the local working *branch/repository/working directory. To apply the retrieved changes, git merge or git rebase must be run. The git pull command performs both the function of git fetch and git merge/rebase, so changes are fetched/retrieved from the remote repository and then automatically integrated into the current local branch/repository/working directory.
+A5:
+If you create a dedicated branch to work on a new feature, and another teammate updates the main branch with new commits, this results in a forked history. If the new update in the main is relevant to the feature you're working on, you would want to incorporate the updates -- either by rebasing or merging. Merging will tie together the histories of both branches and the graph would look like the two forks have joined at a new node. It is non-destructive, the existing branches (your branch where you are workiing on your new feature and your teammates new commits in the main branch) are not changed. However, if many upstream changes are made in the main branch and you'd like to merge each of those changes as they come along, the graph of your source control will be more messy (with several closed loops). In rebasing, for this example, the entire feature branch would be moved to the tip of the main branch, and rewrites the commits of the feature branch and gives them new commit IDs. In doing so, rebasing rewrites the project history. You get a cleaner project history so the sequence of changes is simplified, but the context of when the upstream changes were incorporated into the main branch (e.g. after how many commits in the main branch was the feature branch created) will not be seen. Rebasing a shared branch is dangerous when the commits you are rebasing should be seen by other developers of your project. For example, if you were rebasing all the new commits in main onto the tip of your feature branch, this only happens in your repository, while the other developers are still working in the original main. Since rebasing results in brand new commits, Git will register that your main branch's history has diverged from everybody else's (so the graph looks like a fork). You can only synchronise the two main branches by merging them back together, which results in an extra merge commit and two sets of commits containing the same changes (the original ones and the ones from your rebased branch), which would be superfluous and confusing.
+So it looks like this to my understanding:
+              D ─ E ─ F' ─ G' ─┐
+             /                  \
+A ─ B ─ C                        M
+             \                  /
+              F ─ G ───────────┘
+A6: 
+So that team members may assign the responsibility of reviewing changes to a more suitable person to ensure that the new code is correct. It also records the review process into the Pull Requests tab for easier error shooting should a problem arise later.
+A7:
+To classify that change on its own (rather than, e.g. together with "modifying main.cpp") as it is a major action and should be separated for future error shooting and tracing back the developer's steps, and reverting it. 
+A8:
+Because can_id was changed in one of the two files that are being merged. @version and loop() were changed in both files so Git doesn't know which changes to use in the merge. 
+A9:
+When pushing CI, only PlatformIO CI workflow ran. It protects the team by compiling the code every time you push, so you know right away if a commit breaks the build. "Doxygen GitHub Pages Deploy Action" did not run because no changes were added to the main. 
+A10:
+.gitignore lists the files and folders that Git should ignore when detecting untracked changes. It is used to prevent unnecessary files from being added to your repository. 
+If Git notices that a file exists but isn't tracked, it is reported so you can decide whether to start tracking them. You can making Git start tracking it by staging the file and preparing it for its first commit. But suppose the file contains sensitive information such as your personal access token or password or API key, you do not want Git to track it as the commits pushed to the shared repository may contain the contents of the file. 
+
+.pio is in .gitignore because it is large, and since it's an automatically generated folder (by PlatformIO to compile and upload your program), it is unnecessary to share it as anyone can recreate its contents by building the project. Also different environments or configurations may produce different build files, so a different environment/configuration would render .pio's contents redundant.
+
+.gitignore only affects files that Git is not already tracking. By committing a file, Git is tracking it, if you add the file to .gitignore, Git will continue tracking it. The file is only ignored if you add it to .gitignore first before committing it (if you commit if after adding it to .gitignore, the path will be ignored and Git will refuse to add it).
